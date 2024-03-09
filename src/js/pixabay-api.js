@@ -1,27 +1,31 @@
+import axios from 'axios';
 import iziToast from 'izitoast';
 import 'izitoast/dist/css/iziToast.min.css';
-
-const BASE_URL = 'https://pixabay.com/api/';
 
 export class ImagesApiService {
   constructor() {
     this.searchQuery = '';
     this.page = 1;
+    this.perPage = 15;
+    this.baseUrl = 'https://pixabay.com/api/';
   }
 
-  fetchImages() {
-    const url = `${BASE_URL}?key=42616276-59c99055eec179e7b1bf68313&q=${this.searchQuery}&lang=en&per_page=15&Page=${this.page}`;
+  async fetchImages() {
+    const url = `${this.baseUrl}?key=42616276-59c99055eec179e7b1bf68313&q=${this.searchQuery}&lang=en&per_page=${this.perPage}&Page=${this.page}`;
+    this.incrementPage();
 
-    return fetch(url)
-      .then(response => response.json())
-      .then(data => {
-        if (data.total === 0) {
-          onError();
-        }
+    try {
+      const response = await axios.get(url);
+      const data = response.data;
 
-        this.incrementPage();
-        return data.hits;
-      });
+      if (data.total === 0) {
+        onError();
+      }
+
+      return data.hits;
+    } catch (error) {
+      throw new Error('Failed to fetch images');
+    }
   }
 
   incrementPage() {

@@ -1,3 +1,4 @@
+import axios from 'axios';
 import { appendHitsMarkup, clearHitsContainer } from './js/render-functions';
 import { ImagesApiService, onError } from './js/pixabay-api';
 import SimpleLightbox from 'simplelightbox';
@@ -7,15 +8,18 @@ const refs = {
   searchForm: document.querySelector('.js-search-form'),
   waitingText: document.querySelector('.js-waiting-text'),
   imagesContainer: document.querySelector('.js-images-container'),
+  loadMoreButton: document.querySelector('.js-load-more-btn'),
 };
 
 const imagesApiService = new ImagesApiService();
 
 refs.searchForm.addEventListener('submit', onSearch);
+refs.loadMoreButton.addEventListener('click', onLoadMore);
 
-function onSearch(e) {
+async function onSearch(e) {
   e.preventDefault();
 
+  refs.loadMoreButton.style.display = 'block';
   refs.waitingText.style.display = 'block';
 
   imagesApiService.query = e.currentTarget.elements.query.value;
@@ -28,19 +32,27 @@ function onSearch(e) {
     return;
   }
 
-  imagesApiService
-    .fetchImages()
-    .then(hits => {
-      clearWaitingText();
-      clearHitsContainer(refs.imagesContainer);
-      appendHitsMarkup(hits, refs.imagesContainer);
-      initializeSimpleLightbox();
-    })
-    .catch(error => {
-      onError(error);
-    });
+  try {
+    const hits = await imagesApiService.fetchImages();
+    clearWaitingText();
+    clearHitsContainer(refs.imagesContainer);
+    appendHitsMarkup(hits, refs.imagesContainer);
+    initializeSimpleLightbox();
+  } catch (error) {
+    onError(error);
+  }
 
   refs.searchForm.reset();
+}
+
+async function onLoadMore() {
+  try {
+    const hits = await imagesApiService.fetchImages();
+    appendHitsMarkup(hits, refs.imagesContainer);
+    initializeSimpleLightbox();
+  } catch (error) {
+    onError(error);
+  }
 }
 
 function clearWaitingText() {

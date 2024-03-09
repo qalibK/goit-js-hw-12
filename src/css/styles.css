@@ -72,7 +72,9 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  flex-direction: column;
   padding: 70px 15px;
+  gap: 32px;
 }
 
 .gallery-item {
@@ -119,4 +121,24 @@
   width: fit-content;
   margin: 0 auto;
   padding-top: 20px;
+}
+
+.load-more-btn {
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 1.5;
+  letter-spacing: 0.04em;
+  color: #fff;
+  border-radius: 8px;
+  padding: 8px 16px;
+  width: 132px;
+  height: 40px;
+  background: #4e75ff;
+  outline: none;
+  border: none;
+  transition: 0.3s;
+}
+
+.load-more-btn:hover {
+  background: #6c8cff;
 }
