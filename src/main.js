@@ -19,7 +19,6 @@ refs.loadMoreButton.addEventListener('click', onLoadMore);
 async function onSearch(e) {
   e.preventDefault();
 
-  refs.loadMoreButton.style.display = 'block';
   refs.waitingText.style.display = 'block';
 
   imagesApiService.query = e.currentTarget.elements.query.value;
@@ -28,30 +27,44 @@ async function onSearch(e) {
   if (imagesApiService.query === '') {
     onError();
     clearWaitingText();
+    refs.loadMoreButton.style.display = 'none';
     clearHitsContainer(refs.imagesContainer);
     return;
   }
 
   try {
     const hits = await imagesApiService.fetchImages();
+    refs.loadMoreButton.style.display = 'block';
     clearWaitingText();
     clearHitsContainer(refs.imagesContainer);
     appendHitsMarkup(hits, refs.imagesContainer);
     initializeSimpleLightbox();
   } catch (error) {
-    onError(error);
+    refs.loadMoreButton.style.display = 'none';
+    throw new Error('Failed to fetch images');
   }
 
   refs.searchForm.reset();
 }
 
-async function onLoadMore() {
+async function onLoadMore(e) {
+  e.preventDefault();
+
+  refs.waitingText.style.display = 'block';
+
   try {
     const hits = await imagesApiService.fetchImages();
+    clearWaitingText();
     appendHitsMarkup(hits, refs.imagesContainer);
     initializeSimpleLightbox();
+    window.scrollBy({
+      top:
+        document.querySelector('.gallery-item').getBoundingClientRect().height *
+        2,
+      behavior: 'smooth',
+    });
   } catch (error) {
-    onError(error);
+    throw new Error('Failed to load more images');
   }
 }
 

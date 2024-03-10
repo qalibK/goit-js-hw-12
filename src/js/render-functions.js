@@ -4,7 +4,7 @@ export function appendHitsMarkup(data, container) {
       item =>
         `<li class="gallery-item">
           <a href="${item.largeImageURL}">
-            <img src="${item.webformatURL}" alt="${item.tags}" width="360" height="200"/>
+            <img src="${item.webformatURL}" alt="${item.tags}" width="360" height="152"/>
             <div class="text-content-box">
                 <p class="image-text"><span class="image-title">Likes</span> ${item.likes}</p>
                 <p class="image-text"><span class="image-title">Views</span> ${item.views}</p>

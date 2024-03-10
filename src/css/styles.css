@@ -81,6 +81,7 @@
   width: 100%;
   height: auto;
   border: 1px solid #808080;
+  scroll-behavior: smooth;
 }
 
 .images {
@@ -91,10 +92,10 @@
 
 .text-content-box {
   display: flex;
-  gap: 25px;
+  gap: 20px;
   justify-content: center;
   align-items: center;
-  padding: 10px 30px;
+  padding: 4px 20px;
 }
 
 .image-text {
@@ -120,7 +121,6 @@
 .waiting-text {
   width: fit-content;
   margin: 0 auto;
-  padding-top: 20px;
 }
 
 .load-more-btn {
