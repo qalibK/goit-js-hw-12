@@ -41,7 +41,7 @@ async function onSearch(e) {
     initializeSimpleLightbox();
   } catch (error) {
     refs.loadMoreButton.style.display = 'none';
-    throw new Error('Failed to fetch images');
+    console.log('Failed to load more images');
   }
 
   refs.searchForm.reset();
@@ -64,7 +64,7 @@ async function onLoadMore(e) {
       behavior: 'smooth',
     });
   } catch (error) {
-    throw new Error('Failed to load more images');
+    console.log('Failed to load more images');
   }
 }
 

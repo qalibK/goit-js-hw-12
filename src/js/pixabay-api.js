@@ -18,7 +18,7 @@ export class ImagesApiService {
     try {
       const response = await axios.get(url);
       const data = response.data;
-      const totalHits = data.totalHits;
+      this.totalHits = data.totalHits;
 
       if (data.total === 0) {
         onError();
@@ -26,15 +26,17 @@ export class ImagesApiService {
         return;
       }
 
-      if (totalHits < this.page * this.perPage) {
-        onHitsError();
+      if (data.hits.length < this.perPage) {
+        this.loadMoreButton.disabled = true;
         this.loadMoreButton.style.display = 'none';
-        return;
+        onEndOfList();
       }
 
       return data.hits;
     } catch (error) {
-      throw new Error('Failed to fetch images');
+      onEndOfList();
+      this.loadMoreButton.style.display = 'none';
+      console.log(error);
     }
   }
 
@@ -77,23 +79,22 @@ export function onError(error) {
   });
 }
 
-function onHitsError() {
+function onEndOfList() {
   iziToast.show({
     message: `We're sorry, but you've reached the end of search results.`,
     position: 'topRight',
     timeout: 5000,
-    backgroundColor: '#ef4040',
+    backgroundColor: '#4e75ff',
     messageColor: '#ffffff',
     messageSize: '12',
     close: true,
     closeOnEscape: true,
-    progressBarColor: '#B51B1B',
+    progressBarColor: '#ffffff',
     progressBar: true,
     layout: 2,
     maxWidth: 432,
     maxHeigth: 88,
     animateInside: true,
-    iconUrl: './img/x-octagon.svg',
     transitionIn: 'fadeInRight',
     transitionOut: 'fadeOutRight',
   });
